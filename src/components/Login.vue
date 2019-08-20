@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
   data () {
@@ -44,29 +43,31 @@ export default {
     restForm () {
       this.$refs.form.resetFields()
     },
-    login () {
-      this.$refs.form.validate((idvalid) => {
-        if (!idvalid) return
-        console.log(idvalid)
+
+    async login () {
+      try {
+        await this.$refs.form.validate()
+
         // 发送ajax请求
-        axios.post('http://localhost:8888/api/private/v1/login', this.form).then(res => {
-          const { meta, data } = res.data
-          if (res.data.meta.status === 200) {
-            this.$message({
-              message: meta.msg,
-              type: 'success'
-            })
-            localStorage.setItem('token', data.token)
-            this.$router.push('/index')
-          } else {
-            console.log(meta.msg)
-            this.$message({
-              message: meta.msg,
-              type: 'error'
-            })
-          }
-        })
-      })
+        const { meta, data } = await this.$axios.post('login', this.form)
+
+        if (meta.status === 200) {
+          this.$message({
+            message: meta.msg,
+            type: 'success'
+          })
+          localStorage.setItem('token', data.token)
+          this.$router.push('/index')
+        } else {
+          console.log(meta.msg)
+          this.$message({
+            message: meta.msg,
+            type: 'error'
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 
