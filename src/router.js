@@ -25,9 +25,9 @@ const router = new Router({
       component: Index,
 
       children: [
-        { path: '/users', component: Users },
-        { path: '/roles', component: Roles },
-        { path: '/rights', component: Rights }
+        { path: '/users', name: 'users', component: Users },
+        { path: '/roles', name: 'roles', component: Roles },
+        { path: '/rights', name: 'rights', component: Rights }
       ]
     }
 

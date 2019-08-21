@@ -1,13 +1,15 @@
 <template>
-  <div>角色列表</div>
+  <div>
+</div>
 </template>
 
 <script>
 export default {
 
 }
+
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>
