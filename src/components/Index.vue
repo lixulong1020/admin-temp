@@ -1,6 +1,5 @@
 <template>
-  <div class="index">
-    <el-container>
+    <el-container class="index">
       <el-header>
         <div class="logo">
           <img src="../assets/logo.png" alt />
@@ -13,6 +12,7 @@
           <a href="javascript:;" @click='logut'>退出</a>
         </div>
       </el-header>
+
       <el-container>
         <el-aside width="200px">
           <el-menu
@@ -55,7 +55,7 @@
         </el-main>
       </el-container>
     </el-container>
-  </div>
+
 </template>
 
 <script>
@@ -79,9 +79,7 @@ export default {
 <style lang='scss' scoped>
 .index {
   height: 100%;
-  .el-container {
-    height: 100%;
-    .el-header {
+  .el-header {
       background-color: #d8d8d8;
       display: flex;
       .logo {
@@ -109,6 +107,7 @@ export default {
         }
       }
     }
+
     .el-aside {
       background: #545c64;
       .el-menu{
@@ -117,7 +116,8 @@ export default {
     }
     .el-main {
       background: #ecf0f1;
+
     }
-  }
+
 }
 </style>

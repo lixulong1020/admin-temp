@@ -9,7 +9,7 @@
 
 </el-breadcrumb>
 <!-- 搜索框 -->
-  <el-input placeholder="请输入搜索关键字" v-model="query" class="input-with-select">
+  <el-input placeholder="请输入搜索关键字" v-model="query" class="input-with-select" >
 
     <el-button slot="append" icon="el-icon-search" @click='search'></el-button>
   </el-input>

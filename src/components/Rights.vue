@@ -7,20 +7,20 @@
       <el-breadcrumb-item>权限列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 表格 -->
-  <el-table
-     :data="rightList"
-      style="width: 100%">
-      <el-table-column type="index" :index="indexMethod"></el-table-column>
-      <el-table-column label="权限名称" prop="authName"></el-table-column>
-      <el-table-column label="路径" prop="path"></el-table-column>
-      <el-table-column label="层级">
+    <template>
+      <el-table :data="rightList" style="wisth">
+        <el-table-column type="index" :index="indexMethod" width="50"></el-table-column>
+        <el-table-column label="权限名称" prop="authName"></el-table-column>
+        <el-table-column label="路径" prop="path"></el-table-column>
+        <el-table-column label="层级">
         <template v-slot:default="{ row }">
           <span v-if="row.level === '0'">一级</span>
           <span v-if="row.level === '1'">二级</span>
           <span v-if="row.level === '2'">三级</span>
         </template>
-      </el-table-column>
-    </el-table>
+        </el-table-column>
+      </el-table>
+    </template>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
       if (meta.status === 200) {
         // 获取数据成功
         this.rightList = data
-        console.log(data)
+        // console.log(data)
       } else {
         this.$message.error(meta.msg)
       }
@@ -52,6 +52,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style  lang="scss" scoped>
+#app{
+  height: auto;
+}
 </style>
