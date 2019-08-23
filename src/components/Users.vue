@@ -49,11 +49,11 @@
       <el-table-column
 
         label="操作">
-        <template v-slot:default='butt'>
- <el-button type="primary" icon="el-icon-edit" plain   size="small" @click='showEditDialog(butt.row)'></el-button>
+        <template v-slot:default='{row}'>
+ <el-button type="primary" icon="el-icon-edit" plain   size="small" @click='showEditDialog(row)'></el-button>
 
-    <el-button type="danger" icon="el-icon-delete" plain   size="small" @click='delusers(butt.row.id)'></el-button>
-      <el-button type="success" icon="el-icon-check" plain  size="small">
+    <el-button type="danger" icon="el-icon-delete" plain   size="small" @click='delusers(row.id)'></el-button>
+      <el-button type="success" icon="el-icon-check" plain  size="small" @click="showCation(row)">
 分配角色
       </el-button>
 </template>
@@ -94,6 +94,32 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button @click="adduser" type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 分配角色 -->
+<el-dialog
+      title="分配角色"
+      :visible.sync="assVisible"
+      width="40%">
+
+      <el-form :model="assForm" label-width="80px">
+        <el-form-item label="用户名" >
+          <el-tag type="info">{{assForm.username}}</el-tag>
+        </el-form-item>
+        <el-form-item label="用户名" >
+        <el-select v-model="assForm.rid" placeholder="请选择">
+    <el-option
+      v-for="item in roList"
+      :key="item.id"
+      :label="item.roleName"
+      :value="item.id">
+    </el-option>
+  </el-select>
+        </el-form-item>
+</el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="assVisible = false">取 消</el-button>
+        <el-button  type="primary" @click='assignRole'>分 配</el-button>
       </span>
     </el-dialog>
 
@@ -172,7 +198,17 @@ export default {
 
           { pattern: /^1[3-9]\d{9}$/, message: '长度在 3 到 12个字符', trigger: ['change,blur'] }
         ]
-      }
+      },
+      assVisible: false,
+      assForm: {
+
+        // 用户id
+        id: '',
+        username: '',
+        // 角色 id
+        rid: ''
+      },
+      roList: []
 
     }
   },
@@ -205,7 +241,7 @@ export default {
     },
     handleCurrentChange (val) {
       this.pagenum = val
-      console.log(val)
+      // console.log(val)
       // 每页显示几个
       this.getUserList()
     },
@@ -269,7 +305,7 @@ export default {
         await this.$refs.form.validate()
         // 请求
         const { meta } = await this.$axios.post('users', this.form)
-        console.log(meta)
+        // console.log(meta)
         if (meta.status === 201) {
           this.$message.success(meta.msg)
           // 关闭模态框
@@ -313,6 +349,42 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      }
+    },
+    async  showCation (row) {
+      this.assVisible = true
+      this.assForm.username = row.username
+      this.assForm.id = row.id
+      // 角色id  rid也要回显
+
+      const res = await this.$axios.get(`users/${row.id}`)
+      // console.log(res)
+      if (res.meta.status === 200) {
+        this.assForm.rid = res.data.rid !== -1 ? res.data.rid : ''
+        // console.log(this.assForm.rid)
+      }
+
+      const { data, meta } = await this.$axios.get('roles')
+      if (meta.status === 200) {
+        this.roList = data
+        // console.log(data)
+      } else {
+        this.$message.error(meta.msg)
+      }
+    },
+
+    async  assignRole () {
+      if (this.assForm.rid === '') {
+        this.$message.error('请选择角色')
+        return
+      }
+      const { meta } = await this.$axios.put(`users/${this.assForm.id}/role`, { rid: this.assForm.rid })
+      if (meta.status === 200) {
+        this.$message.success(meta.msg)
+        this.assVisible = false
+        this.getUserList()
+      } else {
+        this.$message.error(meta.msg)
       }
     }
   }

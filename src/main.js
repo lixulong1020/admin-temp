@@ -25,6 +25,13 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   response = response.data
+  if (response.meta.status === 401) {
+    // 只要后台返回401, 说明, token 是无效的
+    // 1. 清掉无效的token
+    localStorage.removeItem('token')
+    // 2. 拦截到登录页, this.$router.push(..)
+    this.$router.push('/login')
+  }
   return response
 }, function (error) {
   // 对响应错误做点什么
